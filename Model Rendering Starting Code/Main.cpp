@@ -88,10 +88,58 @@ void display() {
     //  Clear screen and Z-buffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    // ----------------------------------------------------------
+    // PROJECTION MATRIX
+    // ----------------------------------------------------------
+
+    //setup
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+
+    //clipping planes used for both ortho and perspective
+    float clipNear = 0.1f, clipFar = 100.0f;
+     //orhtographic view - no perspective, straight fov
+    float orthoLeft = -1.0f, orthoRight = 1.0f, orthoTop = 1.0f, orthoBottom = -1.0f;
+    //glOrtho(orthoLeft, orthoRight, orthoBottom, orthoTop, clipNear, clipFar);
+
+    //persepctive view, dofferent view based on camera position, views wider field of view
+    float fov = 90, aspectRatio = windowWidth / windowHeight;
+    gluPerspective(fov, aspectRatio, clipNear, clipFar);
+
+
+    // ----------------------------------------------------------
+    // VIEW AND MODEL MATRICES COMBINED
+    // ----------------------------------------------------------
+    //setup the matrix tp be edited
+    glMatrixMode(GL_MODELVIEW);
+
 
     // Reset the matrix
     glLoadIdentity();
 
+    // ----------------------------------------------------------
+    // VIEW TRANSFORMS
+    // ----------------------------------------------------------
+    float cameraX = 0, cameraY = 0, cameraZ = -1;
+    float lookX = 0, lookY = 0, lookZ = 0;
+    float upX = 0, upY = 1, upZ = 0;
+    gluLookAt(cameraX, cameraY, cameraZ, lookX, lookY, lookZ, upX, upY, upZ);
+
+    // ----------------------------------------------------------
+    // MODEL TRANSFORMS
+    // ----------------------------------------------------------
+
+    //Translae to set location
+    glTranslatef(0.0f, 0.0f, 0.0f);
+
+
+    //rotate to the correct angles
+    glRotatef(rotate_y, 0.0f, 1.0f, 0.0f); //yaw
+    glRotatef(rotate_x, 1.0f, 0.0f, 0.0f); //pitch
+    glRotatef(0, 0.0f, 0.0f, 1.0f); //roll
+
+    //scale to desired dimmensions
+    glScalef(1.0f, 1.0f, 1.0f);
 
 
     // MODEL - draw the cube
